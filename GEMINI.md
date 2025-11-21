@@ -2,9 +2,9 @@
 
 ## 🌐 Project Overview
 
-This is a simple Java project named "EjemploConexionJDBC" that demonstrates a basic connection to a MariaDB database using the JDBC driver. The application reads database credentials and connection details from an external `jdbc.properties` configuration file.
+This is a simple Java project named "EjemploConexionJDBC" that demonstrates how to connect to a MariaDB database and perform a full suite of CRUD (Create, Read, Update, Delete) operations. The application reads database credentials and connection details from an external `jdbc.properties` configuration file.
 
-The main application logic is contained within `src/ejemploconexionjdbc/App.java`, which handles loading the configuration and establishing the database connection.
+The main application logic is contained within `src/ejemploconexionjdbc/App.java`, which handles loading the configuration, establishing the database connection, and running the CRUD demonstration.
 
 ## ⚙️ Building and Running
 
@@ -13,9 +13,13 @@ The main application logic is contained within `src/ejemploconexionjdbc/App.java
 *   Java Development Kit (JDK)
 *   MariaDB JDBC Driver (included in the `lib/` directory)
 
-### Configuration
+### 1. Database Setup
 
-Before running the application, you must create a configuration file for the database connection.
+Before running the application, you must set up the database schema and initial data. Connect to your MariaDB instance and execute the script located at `db/create-populate-inventario-table.sql`. This will create the necessary `inventario` table and populate it with sample data.
+
+### 2. Configuration
+
+After setting up the database, you must create a configuration file for the database connection.
 
 1.  Copy the sample configuration file:
     ```bash
@@ -23,7 +27,7 @@ Before running the application, you must create a configuration file for the dat
     ```
 2.  Edit `config/jdbc.properties` and fill in your actual database credentials (host, port, database name, user, and password).
 
-### Compilation
+### 3. Compilation
 
 To compile the Java source code, run the following command from the project root directory:
 
@@ -33,7 +37,7 @@ javac -cp "lib/*" src/ejemploconexionjdbc/App.java -d bin
 
 This command compiles the `App.java` file and places the resulting `.class` files into the `bin/` directory.
 
-### Execution
+### 4. Execution
 
 To run the application after compiling it, use the following command from the project root directory:
 
@@ -41,17 +45,17 @@ To run the application after compiling it, use the following command from the pr
 java -cp "bin;lib/*" ejemploconexionjdbc.App
 ```
 
-The application will then attempt to connect to the database using the credentials from `config/jdbc.properties` and will print a success or failure message to the console.
+The application will then connect to the database, run the CRUD demonstration, and print a success or failure message to the console.
 
 ## 🎯 Core Development Principles
 
 *   **Configuration Management**: Keep sensitive data like database credentials out of the source code. The use of a `jdbc.properties` file, which is ignored by Git, is the standard convention for this project.
-*   **Modularity**: The database configuration logic is separated into a dedicated `DbConfig` record and a `loadDbConfig` method, keeping the main method clean and focused on the connection logic.
+*   **Modularity**: The database configuration logic is separated from the application logic.
 *   **Dependency Management**: Dependencies like the JDBC driver are stored in the `lib/` directory and referenced via the classpath during compilation and execution.
 
 ## 🗃️ SQL Script Organization
 
 Database-related SQL scripts are organized in the `db/` directory at the project root. This structure helps in separating database schema definitions from data manipulation operations.
 
-*   **`db/ddl/`**: This directory is intended for Data Definition Language (DDL) scripts. These scripts are used to define, modify, or drop the database structure, such as creating tables, indexes, or views. Example files: `create_tables.sql`, `alter_columns.sql`.
-*   **`db/dml/`**: This directory is for Data Manipulation Language (DML) scripts. These scripts are used for inserting, updating, or deleting data within the database. This includes scripts for populating initial data, test data, or routine data modifications. Example files: `insert_initial_data.sql`, `populate_test_users.sql`.
+*   **`db/ddl/`**: This directory is intended for Data Definition Language (DDL) scripts. These scripts are used to define, modify, or drop the database structure.
+*   **`db/dml/`**: This directory is for Data Manipulation Language (DML) scripts. These scripts are used for inserting, updating, or deleting data. The main setup script `create-populate-inventario-table.sql` combines both for convenience.
