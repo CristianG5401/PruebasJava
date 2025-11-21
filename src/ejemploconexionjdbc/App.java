@@ -68,7 +68,8 @@ public class App {
     }
 
     /**
-     * Establece una conexión a la base de datos y ejecuta una consulta de prueba.
+     * Establece una conexión a la base de datos y ejecuta una secuencia de demostración
+     * de operaciones CRUD (Crear, Leer, Actualizar, Eliminar).
      *
      * @param config El objeto de configuración de la base de datos.
      * @throws SQLException           Si ocurre un error de acceso a la base de
@@ -82,21 +83,114 @@ public class App {
         // asegurar la carga del driver.
         Class.forName(config.driverClass());
 
-        // Utiliza un bloque try-with-resources para asegurar que la conexión,
-        // el PreparedStatement y el ResultSet se cierren automáticamente.
-        try (Connection connection = DriverManager.getConnection(config.url(), config.user(), config.password());
-                PreparedStatement statement = connection.prepareStatement(config.testQuery());
-                ResultSet resultSet = statement.executeQuery()) {
+        // Utiliza un bloque try-with-resources para asegurar que la conexión se cierre automáticamente.
+        try (Connection connection = DriverManager.getConnection(config.url(), config.user(), config.password())) {
 
-            if (!resultSet.next()) {
-                System.out.println("La conexión se realizó, pero la consulta de prueba no devolvió resultados.");
-                return;
+            System.out.println("Conexión establecida exitosamente.");
+
+            // 1. Leer inventario actual
+            System.out.println("\n--- Inventario Inicial ---");
+            leerInventario(connection);
+
+            // 2. Insertar nuevo registro
+            System.out.println("\n--- Insertando nuevo registro ---");
+            insertarInventario(connection, "9999999999999", "Producto Prueba", 100);
+            leerInventario(connection);
+
+            // 3. Actualizar registro
+            System.out.println("\n--- Actualizando registro ---");
+            actualizarInventario(connection, "9999999999999", 50);
+            leerInventario(connection);
+
+            // 4. Eliminar registro
+            System.out.println("\n--- Eliminando registro ---");
+            eliminarInventario(connection, "9999999999999");
+            leerInventario(connection);
+        }
+    }
+
+    /**
+     * Inserta un nuevo registro en la tabla inventario.
+     *
+     * @param conn     La conexión a la base de datos.
+     * @param id       El identificador del inventario (id_inventaraio).
+     * @param producto El nombre o identificador del producto.
+     * @param cantidad La cantidad del producto.
+     * @throws SQLException Si ocurre un error durante la inserción.
+     */
+    private static void insertarInventario(Connection conn, String id, String producto, int cantidad) throws SQLException {
+        String sql = "INSERT INTO inventario (id_inventaraio, id_producto, cantidad) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, id);
+            pstmt.setString(2, producto);
+            pstmt.setInt(3, cantidad);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.printf("Insertado: %s, %s, %d%n", id, producto, cantidad);
             }
+        }
+    }
 
-            // Asumiendo que la consulta de prueba devuelve una columna llamada
-            // "id_producto".
-            String result = resultSet.getString("id_producto");
-            System.out.printf("Conexión exitosa. Resultado de la consulta de prueba: %s%n", result);
+    /**
+     * Lee y muestra todos los registros de la tabla inventario.
+     *
+     * @param conn La conexión a la base de datos.
+     * @throws SQLException Si ocurre un error durante la consulta.
+     */
+    private static void leerInventario(Connection conn) throws SQLException {
+        String sql = "SELECT id_inventaraio, id_producto, cantidad FROM inventario";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            System.out.printf("%-20s %-30s %-10s%n", "ID", "PRODUCTO", "CANTIDAD");
+            System.out.println("--------------------------------------------------------------");
+            while (rs.next()) {
+                System.out.printf("%-20s %-30s %-10d%n",
+                        rs.getString("id_inventaraio"),
+                        rs.getString("id_producto"),
+                        rs.getInt("cantidad"));
+            }
+        }
+    }
+
+    /**
+     * Actualiza la cantidad de un registro existente en la tabla inventario.
+     *
+     * @param conn          La conexión a la base de datos.
+     * @param id            El identificador del inventario a actualizar.
+     * @param nuevaCantidad La nueva cantidad a asignar.
+     * @throws SQLException Si ocurre un error durante la actualización.
+     */
+    private static void actualizarInventario(Connection conn, String id, int nuevaCantidad) throws SQLException {
+        String sql = "UPDATE inventario SET cantidad = ? WHERE id_inventaraio = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, nuevaCantidad);
+            pstmt.setString(2, id);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.printf("Actualizado ID %s a cantidad %d%n", id, nuevaCantidad);
+            } else {
+                System.out.println("No se encontró el registro para actualizar.");
+            }
+        }
+    }
+
+    /**
+     * Elimina un registro de la tabla inventario.
+     *
+     * @param conn La conexión a la base de datos.
+     * @param id   El identificador del inventario a eliminar.
+     * @throws SQLException Si ocurre un error durante la eliminación.
+     */
+    private static void eliminarInventario(Connection conn, String id) throws SQLException {
+        String sql = "DELETE FROM inventario WHERE id_inventaraio = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, id);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.printf("Eliminado ID %s%n", id);
+            } else {
+                System.out.println("No se encontró el registro para eliminar.");
+            }
         }
     }
 
