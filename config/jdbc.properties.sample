@@ -1,3 +1,5 @@
+# Configuración de ejemplo para conexión JDBC
+# Reemplaza los valores por los de tu base de datos
 db.url=jdbc:mariadb://url_servidor:puerto/nombre_base_datos?useSSL=false&serverTimezone=UTC
 db.user=usuario
 db.password=contraseña
