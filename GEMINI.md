@@ -48,3 +48,10 @@ The application will then attempt to connect to the database using the credentia
 *   **Configuration Management**: Keep sensitive data like database credentials out of the source code. The use of a `jdbc.properties` file, which is ignored by Git, is the standard convention for this project.
 *   **Modularity**: The database configuration logic is separated into a dedicated `DbConfig` record and a `loadDbConfig` method, keeping the main method clean and focused on the connection logic.
 *   **Dependency Management**: Dependencies like the JDBC driver are stored in the `lib/` directory and referenced via the classpath during compilation and execution.
+
+## 🗃️ SQL Script Organization
+
+Database-related SQL scripts are organized in the `db/` directory at the project root. This structure helps in separating database schema definitions from data manipulation operations.
+
+*   **`db/ddl/`**: This directory is intended for Data Definition Language (DDL) scripts. These scripts are used to define, modify, or drop the database structure, such as creating tables, indexes, or views. Example files: `create_tables.sql`, `alter_columns.sql`.
+*   **`db/dml/`**: This directory is for Data Manipulation Language (DML) scripts. These scripts are used for inserting, updating, or deleting data within the database. This includes scripts for populating initial data, test data, or routine data modifications. Example files: `insert_initial_data.sql`, `populate_test_users.sql`.
