@@ -1,1 +1,21 @@
+# Fichero de configuración local con credenciales
+# Contiene información sensible que no debe ser versionada.
 config/jdbc.properties
+
+# Directorio de salida del compilador
+# Contiene los ficheros .class generados.
+/bin/
+
+# Ficheros del IDE y del sistema
+.vscode/
+*.swp
+*.swo
+*~
+
+# Ficheros de log
+*.log
+
+# Ficheros de compilación de Maven/Gradle (opcional, pero buena práctica)
+/target/
+/build/
+.gradle/
