@@ -15,7 +15,8 @@ import java.util.Properties;
  * Clase principal que demuestra una conexión a una base de datos mediante JDBC.
  *
  * <p>
- * Esta aplicación carga la configuración de la base de datos desde un archivo de
+ * Esta aplicación carga la configuración de la base de datos desde un archivo
+ * de
  * propiedades,
  * establece una conexión, ejecuta una consulta de prueba y muestra el
  * resultado.
@@ -23,7 +24,8 @@ import java.util.Properties;
  */
 public class App {
     /**
-     * Ruta al archivo de configuración que contiene los detalles de la conexión a la
+     * Ruta al archivo de configuración que contiene los detalles de la conexión a
+     * la
      * base de datos.
      */
     private static final String CONFIG_FILE_PATH = "config/jdbc.properties";
@@ -63,12 +65,14 @@ public class App {
         } catch (SQLException exception) {
             System.err.println("Error al conectar con la base de datos: " + exception.getMessage());
         } catch (ClassNotFoundException exception) {
-            System.err.println("Error: No se encontró la clase del controlador de la base de datos: " + exception.getMessage());
+            System.err.println(
+                    "Error: No se encontró la clase del controlador de la base de datos: " + exception.getMessage());
         }
     }
 
     /**
-     * Establece una conexión a la base de datos y ejecuta una secuencia de demostración
+     * Establece una conexión a la base de datos y ejecuta una secuencia de
+     * demostración
      * de operaciones CRUD (Crear, Leer, Actualizar, Eliminar).
      *
      * @param config El objeto de configuración de la base de datos.
@@ -83,7 +87,8 @@ public class App {
         // asegurar la carga del driver.
         Class.forName(config.driverClass());
 
-        // Utiliza un bloque try-with-resources para asegurar que la conexión se cierre automáticamente.
+        // Utiliza un bloque try-with-resources para asegurar que la conexión se cierre
+        // automáticamente.
         try (Connection connection = DriverManager.getConnection(config.url(), config.user(), config.password())) {
 
             System.out.println("Conexión establecida exitosamente.");
@@ -118,13 +123,14 @@ public class App {
      * @param cantidad La cantidad del producto.
      * @throws SQLException Si ocurre un error durante la inserción.
      */
-    private static void insertarInventario(Connection conn, String id, String producto, int cantidad) throws SQLException {
+    private static void insertarInventario(Connection conn, String id, String producto, int cantidad)
+            throws SQLException {
         String sql = "INSERT INTO inventario (id_inventaraio, id_producto, cantidad) VALUES (?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, id);
-            pstmt.setString(2, producto);
-            pstmt.setInt(3, cantidad);
-            int rows = pstmt.executeUpdate();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, producto);
+            preparedStatement.setInt(3, cantidad);
+            int rows = preparedStatement.executeUpdate();
             if (rows > 0) {
                 System.out.printf("Insertado: %s, %s, %d%n", id, producto, cantidad);
             }
@@ -139,15 +145,29 @@ public class App {
      */
     private static void leerInventario(Connection conn) throws SQLException {
         String sql = "SELECT id_inventaraio, id_producto, cantidad FROM inventario";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+            // Imprime los encabezados de la tabla con formato.
+            // %-20s: Alinea a la izquierda un String en un campo de 20 caracteres de ancho.
+            // %-30s: Alinea a la izquierda un String en un campo de 30 caracteres de ancho.
+            // %-10s: Alinea a la izquierda un String en un campo de 10 caracteres de ancho.
+            // %n: Inserta un salto de línea independiente de la plataforma.
             System.out.printf("%-20s %-30s %-10s%n", "ID", "PRODUCTO", "CANTIDAD");
             System.out.println("--------------------------------------------------------------");
-            while (rs.next()) {
+            while (resultSet.next()) {
+                // Imprime cada fila de resultados con el mismo formato para mantener la
+                // alineación.
+                // %-20s: Muestra id_inventaraio (String) en un campo de 20 caracteres, alineado
+                // a la izquierda.
+                // %-30s: Muestra id_producto (String) en un campo de 30 caracteres, alineado a
+                // la izquierda.
+                // %-10d: Muestra cantidad (entero decimal) en un campo de 10 caracteres,
+                // alineado a la izquierda.
+                // %n: Inserta un salto de línea.
                 System.out.printf("%-20s %-30s %-10d%n",
-                        rs.getString("id_inventaraio"),
-                        rs.getString("id_producto"),
-                        rs.getInt("cantidad"));
+                        resultSet.getString("id_inventaraio"),
+                        resultSet.getString("id_producto"),
+                        resultSet.getInt("cantidad"));
             }
         }
     }
@@ -162,10 +182,10 @@ public class App {
      */
     private static void actualizarInventario(Connection conn, String id, int nuevaCantidad) throws SQLException {
         String sql = "UPDATE inventario SET cantidad = ? WHERE id_inventaraio = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, nuevaCantidad);
-            pstmt.setString(2, id);
-            int rows = pstmt.executeUpdate();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1, nuevaCantidad);
+            preparedStatement.setString(2, id);
+            int rows = preparedStatement.executeUpdate();
             if (rows > 0) {
                 System.out.printf("Actualizado ID %s a cantidad %d%n", id, nuevaCantidad);
             } else {
@@ -183,9 +203,9 @@ public class App {
      */
     private static void eliminarInventario(Connection conn, String id) throws SQLException {
         String sql = "DELETE FROM inventario WHERE id_inventaraio = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, id);
-            int rows = pstmt.executeUpdate();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, id);
+            int rows = preparedStatement.executeUpdate();
             if (rows > 0) {
                 System.out.printf("Eliminado ID %s%n", id);
             } else {
