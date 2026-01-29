@@ -19,3 +19,6 @@ config/jdbc.properties
 /target/
 /build/
 .gradle/
+
+# IA
+.kilocode/

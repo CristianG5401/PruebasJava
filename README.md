@@ -48,8 +48,16 @@ javac -cp "lib/*" src/ejemploconexionjdbc/App.java -d bin
 
 Ejecuta la aplicación:
 
+Windows:
+
 ```bash
 java -cp "bin;lib/*" ejemploconexionjdbc.App
+```
+
+Linux/macOS:
+
+```bash
+java -cp "bin:lib/*" ejemploconexionjdbc.App
 ```
 
 La aplicación se conectará a la base de datos y ejecutará una demostración de las operaciones CRUD, imprimiendo los resultados en la consola.
