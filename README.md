@@ -22,19 +22,21 @@ Sigue estos pasos para poner en marcha la aplicación.
 
 Primero, necesitas crear la tabla de la base de datos y poblarla con algunos datos iniciales.
 
-1.  Conéctate a tu instancia de MariaDB/MySQL.
-2.  Crea una base de datos (si aún no tienes una).
-3.  Ejecuta el script SQL ubicado en `db/create-populate-inventario-table.sql` para crear la tabla `inventario` e insertar algunos datos de muestra.
+1. Conéctate a tu instancia de MariaDB/MySQL usando tu cliente de base de datos favorito (como MySQL Workbench, DBeaver, o la línea de comandos).
+2. Crea una base de datos (si aún no tienes una), recuerda que el nombre de la base de datos debe coincidir con el valor especificado en `config/jdbc.properties` en la propiedad `db.url`.
+3. Ejecuta el script SQL ubicado en `db/create-populate-inventario-table.sql` desde tu cliente de base de datos (por ejemplo, MySQL Workbench o DBeaver) para crear la tabla `inventario` e insertar algunos datos de muestra.
 
 ### 2. Configuración de la Aplicación
 
 La aplicación necesita saber cómo conectarse a tu base de datos.
 
-1.  Haz una copia del archivo de ejemplo de configuración:
+1. Haz una copia del archivo de ejemplo de configuración:
+
     ```bash
     cp config/jdbc.properties.sample config/jdbc.properties
     ```
-2.  Abre `config/jdbc.properties` y actualiza las propiedades `db.url`, `db.user` y `db.password` con tus credenciales reales de la base de datos.
+
+2. Abre `config/jdbc.properties` y actualiza las propiedades `db.url`, `db.user` y `db.password` con tus credenciales reales de la base de datos.
 
 ### 3. Compilación
 
